@@ -1,5 +1,10 @@
 # Monkey Island
 
+## dictionary of 6 no. of insults and correct responces
+insults_and_responces = {"You fight like a dairy Farmer!":"How appropriate. You fight like a cow!","I once owned a dog that was smarter than you":"He must have taught you everything you know", "En Garde!  Touche!":"Oh, that is so cliche.","Now I know what filth and stupidity really are.":"I'm glad to hear you attended your family reunion.","You are a pain in the backside, sir!":"Your hemorrhoids are flaring up again, eh?", "I hope you have a boat ready for a quick escape.":"Why, did you want to borrow one?"}
+insults = [insult for insult in insults_and_responces.keys()]
+responces = [responce for responce in insults_and_responces.values()]
+
 ## 
 class players:
   def __init__(self, name, position = 0, dead = False):
@@ -26,39 +31,94 @@ class players:
     else:
       print("{} is in posistion {}".format(self.name, self.position))
 
+
+
 ## create players
 player1 = players("Guybrush Threepwood")
-player2 = players("Danny")
+player2 = players("Le Chuck")
 
-class insult:
-  def __init__(self, curse, re1, re2, win_no = 1, responces = {}):
-    self.curse = curse
-    self.responce1 = re1
-    self.responce2 = re2
-    self.win_no = win_no
-    self.responces = {1:re1 , 2:re2}
+def pick_option(choices):
+  for i in range(len(choices)):
+    print("{}. {}\n".format(str(i+1), choices[i]))
+  idx_choice = len(choices)+1
+  while idx_choice not in range(len(choices)):
+    idx_choice = int(input("please pick 1 - {} ? \n".format(len(choices))))-1
+  return choices[idx_choice]
 
-  def __repr__(self):
-    return self.responces
+def attack(player1, player2, insult):
+  print('''{} said
+"{}". 
 
-  def check(self):
-    if self.win_no == 1:
-      print('curse is "{}". The winning curse is "{}". The loosing curse is "{}".'.format(self.curse, self.responce1, self.responce2))
-    else: 
-      print('curse is "{}". The winning curse is "{}". The loosing curse is "{}".'.format(self.curse, self.responce2, self.responce1))
+{}, 
+what is your responce?  
+    '''.format(player1.name, insult, player2.name))
+  responce = pick_option(responces)
+  if responce == insults_and_responces[insult]:
+    player1.loose()
+    choose_attack(player2, player1)
+  else:
+    player1.win()
+    if player1.position < 3:
+      choose_attack(player1, player2)
+      # else replay()
 
-  def attack(self,player1, player2):
-    print('{} said "{}". {}, what is your responce. 1 "{}" or 2 "{}"'.format(player1.name, self.curse, player2.name, self.responce1, self.responce2))
-    choice = input("please pick 1 or 2?")
-    while choice != "1" and choice != "2":
-      choice = input("Sorry, please pick 1 or 2?")
-    if choice == "1":
-      player1.loose()
-    else:
-      player1.win()
+def choose_attack(player1, player2):
+  print('''
+{},
 
-curse1 = insult("You fight like a dairy Farmer!", "How appropriate. You fight like a cow!", "I am rubber you are glue" )
-curse2 = insult("I once owned a dog that was smarter than you", "You run THAT fast", "He must have taught you everything you know", 2)
-curse3 = insult("En Garde!  Touche!", "Oh, that is so cliche.", "Is that your face? I thought it was your backside.")
+It is your turn to choose an insult, 
+please choose one of the following:
 
-curse1.attack(player1, player2)
+ '''. format(player1.name))
+  insult=pick_option(insults)
+  attack(player1, player2,insult)
+
+
+def StartGame():
+  print("""
+                 ___      _    _   _  _  _   _ ___    _   _
+                  |  |_| |_   (_` |_ /  |_) |_  |    / \ |_
+                  |  | | |_   ._) |_ \_ | \ |_  |    \_/ |
+___        ___      _     ___         ___ ___      ___  _______ ___       ___
+\  \      /  /   ,'___`.  `. `.       \ / \ /    ,' ,' |  _____\`. `.   ,' ,'
+|   \    /   |  / /   \ \  |   `.     | | | |  ,' ,'   | |        `. `.' ,'
+|    \  /    | | |     | | | |`. `.   | | | |,' ,'     | |_,|       `. ,'
+|  |\ \/ /|  | | |     | | | |  `. `. | | |   , `.     |  _ |        | |
+|  | \  / |  |  \ \___/ /  | |    `. `| | | ,' `. `.   | | `'        | |
+|  |  \/  |  |   `.___,'   /_\      `.  | /_\    `. `. | `--.._;|    | |
+|  |      /  \   _   _,----._, .---.  `.|        /\````'---_..__|    | |
+|  |      \  / ,' | / ,-'''-.|  \ /             /  \      \  \   ___ _-|
+/  \       \/  |  | | |      '  | |            / /\ \     |   \  \ / \`'--._
+\  /           |  | \ `-.__     | |           / /  \ \    | |\ \ | | | |`-._`-.
+ \/            |  |  `-.__ `-.  | |          / /____\ \   | | \ \| | | |    `. \ 
+               |  |        \ |  | |____,'|  / ,------. \  | |  \ ' | | |     | |
+               |  | |`-....' /  '--------' '-'        \_\ /_\   \  | | |     | |
+               |  | ''------'                                    \ | /_`-....' /
+               |  |                                               \|    '-----'
+               /  \ 
+          jrei \  /
+                \/
+                
+╔╦╗┬ ┬┬┌─┐  ┬┌─┐  ╔╦╗┌─┐┌┐┌┬┌─┌─┐┬ ┬  ╦┌─┐┬  ┌─┐┌┐┌┌┬┐   
+ ║ ├─┤│└─┐  │└─┐  ║║║│ ││││├┴┐├┤ └┬┘  ║└─┐│  ├─┤│││ ││   
+ ╩ ┴ ┴┴└─┘  ┴└─┘  ╩ ╩└─┘┘└┘┴ ┴└─┘ ┴   ╩└─┘┴─┘┴ ┴┘└┘─┴┘   
+     ╔═╗┌┐┌┌┬┐  ╔╦╗┬ ┬┌─┐  ╦  ┌─┐┌─┐┌┬┐  ╔═╗┬ ┬┌─┐
+     ╠═╣│││ ││   ║ ├─┤├┤   ║  │ │└─┐ │   ║  │ │├─┘
+     ╩ ╩┘└┘─┴┘   ╩ ┴ ┴└─┘  ╩═╝└─┘└─┘ ┴   ╚═╝└─┘┴  
+
+   {} and {} have both lost thier cup and think it has been stolen. 
+   You must both dule till the other wins. 
+   
+   Use your best insults to win. 
+   You need to successuflly insult your opponent 3 times in a row to win.
+   
+   {} you will play go first!!
+   """. format(player1.name, player2.name, player1.name))
+  
+  temp = input("please press any key to continue")
+
+  choose_attack(player1, player2)
+
+##choose_attack(player1, player2)
+StartGame()
+##curse1.attack(player1, player2)
