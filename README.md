@@ -3,7 +3,7 @@ This is my text-based game replicating Monkey Island's insult-and-response sword
 
 This is my first good iteration of the game using a dictionary to store and check the insults and responses. 
 
-Future improvements I plan to make include:
+Future improvements I plan to make include the following.
 Single-player mode.
 Play more than one enemy.
 Allow players to learn insults and responses when enemies use them.
